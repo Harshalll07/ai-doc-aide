@@ -68,26 +68,22 @@ const WhatsAppPage = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not logged in");
 
-      const code = String(Math.floor(100000 + Math.random() * 900000));
-
       const { data, error } = await supabase
         .from("whatsapp_users")
         .insert({
           user_id: user.id,
           phone_number: cleanPhone,
-          verified: false,
-          verification_code: code,
+          verified: true,
+          verification_code: null,
         })
         .select("id, phone_number, verified, verification_code")
         .single();
 
       if (error) throw error;
 
-      await sendOtpToWhatsApp(cleanPhone, code);
-
       setLinkedPhones((prev) => [...prev, data]);
       setPhone("");
-      toast.success("Verification code sent to your WhatsApp!");
+      toast.success("WhatsApp number linked successfully! 🎉");
     } catch (err: any) {
       toast.error(err.message || "Failed to link");
     } finally {

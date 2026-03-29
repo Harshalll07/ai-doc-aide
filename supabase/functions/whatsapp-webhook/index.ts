@@ -66,23 +66,18 @@ serve(async (req) => {
     if (cleanPhone.length === 10) phoneVariants.push("91" + cleanPhone);
 
     // ── Multi-Account Lookup ──
-    let waUsers: any[] = [];
-    for (const pv of phoneVariants) {
-      const { data } = await supabase
-        .from("whatsapp_users")
-        .select("user_id, verified, phone_number")
-        .eq("phone_number", pv);
-      if (data && data.length > 0) {
-        waUsers = data.filter((u: any) => u.verified);
-        break;
-      }
-    }
+    const { data: waData } = await supabase
+      .from("whatsapp_users")
+      .select("user_id, verified, phone_number")
+      .in("phone_number", phoneVariants);
+
+    let waUsers = waData?.filter((u: any) => u.verified) || [];
 
     if (waUsers.length === 0) {
       const msgLower = messageText.toLowerCase();
       if (msgLower === "sort") {
         await sendText(msg91Key, integratedNumber, cleanPhone,
-          "👋 Welcome to Sortifi!\n\nTo use WhatsApp features, please link your account:\n1. Open Sortifi app → Settings → WhatsApp\n2. Enter your number and verify the code sent here");
+          "👋 Welcome to Sortifi!\n\nTo use WhatsApp features, please link your account in the app:\n1. Open Sortifi app → Settings → WhatsApp\n2. Enter your number and click *Link*\n\n*(No verification code needed!)*");
       }
       return jsonOk({ ok: true });
     }
@@ -708,7 +703,7 @@ async function handleSearch(
     const entities = Array.isArray(f.entities) ? f.entities.slice(0, 3) : [];
     const entityStr = entities.map((e: any) => e.value || e.label).filter(Boolean).join(", ");
     const typeEmoji = getFileTypeEmoji(f.file_type);
-    
+
     listMsg += `*${i + 1}.* ${typeEmoji} ${f.file_name}\n`;
     if (summary) listMsg += `   📝 _${summary}_\n`;
     if (entityStr) listMsg += `   🏷️ _${entityStr}_\n`;
