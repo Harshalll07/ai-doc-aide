@@ -4,7 +4,7 @@ import AppLayout from "@/components/AppLayout";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { useFileUpload } from "@/hooks/useFileUpload";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -17,10 +17,33 @@ const FILE_STATUS_MAP: Record<string, { label: string; color: string }> = {
   error: { label: "Error", color: "bg-destructive/10 text-destructive" },
 };
 
+const AI_LOADING_LINES = [
+  "Cooking your file rn... AI chef mode 🍳",
+  "Hold up, brain cells are syncing ⚡",
+  "No cap, this doc is getting decoded 🧠",
+  "Big analysis energy loading... 💅",
+  "We vibing through your PDF pixels 🎧",
+  "Yeeting raw text into smart tags 🚀",
+  "Main character analysis moment ✨",
+  "Lowkey turning chaos into order 📚",
+];
+
 const UploadPage = () => {
   const { files, handleFiles, removeFile } = useFileUpload();
   const [isDragging, setIsDragging] = useState(false);
   const [categorizing, setCategorizing] = useState(false);
+  const [loadingLineTick, setLoadingLineTick] = useState(0);
+
+  useEffect(() => {
+    const hasProcessingFiles = files.some((file) => file.status === "processing");
+    if (!hasProcessingFiles) return;
+
+    const intervalId = window.setInterval(() => {
+      setLoadingLineTick((prev) => prev + 1);
+    }, 1800);
+
+    return () => window.clearInterval(intervalId);
+  }, [files]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -68,6 +91,12 @@ const UploadPage = () => {
   };
 
   const completedCount = files.filter(f => f.status === "complete").length;
+
+  const getGenZLoadingLine = (fileId: string) => {
+    const seed = Array.from(fileId).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const index = (seed + loadingLineTick) % AI_LOADING_LINES.length;
+    return AI_LOADING_LINES[index];
+  };
 
   return (
     <AppLayout>
@@ -157,7 +186,7 @@ const UploadPage = () => {
                         <p className="text-xs text-muted-foreground">
                           {(f.file.size / (1024 * 1024)).toFixed(1)} MB ·{" "}
                           {f.status === "uploading" && "Uploading..."}
-                          {f.status === "processing" && "AI Processing..."}
+                          {f.status === "processing" && getGenZLoadingLine(f.id)}
                           {f.status === "complete" && "Complete"}
                           {f.status === "error" && (f.errorMessage || "Error")}
                         </p>

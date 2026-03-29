@@ -10,6 +10,8 @@ import {
   FileText,
   Calendar,
   Shield,
+  Brain,
+  Sparkles,
 } from "lucide-react";
 import AppLayout from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -24,6 +26,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface UserProfile {
   id: string;
@@ -78,6 +82,8 @@ const AdminPage = () => {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingRole, setCheckingRole] = useState(true);
+  const [aiProvider, setAiProvider] = useState<"lovable" | "gemini">("lovable");
+  const [savingProvider, setSavingProvider] = useState(false);
 
   useEffect(() => {
     checkAdminAndLoad();
@@ -126,8 +132,38 @@ const AdminPage = () => {
         });
         setFileStats(stats);
       }
+
+      // Fetch AI provider setting
+      const { data: aiSetting } = await (supabase as any)
+        .from("app_settings")
+        .select("value")
+        .eq("key", "ai_provider")
+        .maybeSingle();
+
+      if (aiSetting?.value === "gemini" || aiSetting?.value === "lovable") {
+        setAiProvider(aiSetting.value);
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const toggleAiProvider = async (useGemini: boolean) => {
+    const newProvider = useGemini ? "gemini" : "lovable";
+    setSavingProvider(true);
+    try {
+      const { error } = await (supabase as any)
+        .from("app_settings")
+        .update({ value: newProvider, updated_at: new Date().toISOString() })
+        .eq("key", "ai_provider");
+
+      if (error) throw error;
+      setAiProvider(newProvider);
+      toast.success(`AI provider switched to ${useGemini ? "Your Gemini API Key" : "Lovable AI (Default)"}`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update AI provider");
+    } finally {
+      setSavingProvider(false);
     }
   };
 
@@ -215,10 +251,53 @@ const AdminPage = () => {
                 <stat.icon className={cn("w-4 h-4", stat.color)} />
               </div>
               <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
             </motion.div>
           ))}
         </div>
+
+        {/* AI Provider Toggle */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="rounded-xl border border-border bg-card p-5 mb-6"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+              <Brain className="w-4 h-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold">AI Provider for File Analysis</h3>
+              <p className="text-xs text-muted-foreground">Choose between Lovable AI (default) or your own Gemini API key</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 pl-12">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-muted-foreground" />
+              <Label htmlFor="ai-toggle" className={cn("text-sm", aiProvider === "lovable" && "font-semibold text-primary")}>
+                Lovable AI
+              </Label>
+            </div>
+            <Switch
+              id="ai-toggle"
+              checked={aiProvider === "gemini"}
+              onCheckedChange={toggleAiProvider}
+              disabled={savingProvider}
+            />
+            <div className="flex items-center gap-2">
+              <Brain className="w-4 h-4 text-muted-foreground" />
+              <Label htmlFor="ai-toggle" className={cn("text-sm", aiProvider === "gemini" && "font-semibold text-primary")}>
+                My Gemini Key
+              </Label>
+            </div>
+            {savingProvider && <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />}
+          </div>
+          {aiProvider === "gemini" && (
+            <p className="text-xs text-muted-foreground pl-12 mt-2">
+              Using your Gemini API key with retry logic for rate limits. Make sure GEMINI_API_KEY is configured.
+            </p>
+          )}
+        </motion.div>
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-4">

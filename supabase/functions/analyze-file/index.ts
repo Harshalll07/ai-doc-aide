@@ -19,7 +19,8 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!lovableApiKey) throw new Error("LOVABLE_API_KEY not configured");
+    const geminiApiKey = Deno.env.get("GEMINI_API_KEY");
+    if (!lovableApiKey && !geminiApiKey) throw new Error("No AI API key configured");
 
     const backupSupabaseUrl = Deno.env.get("BACKUP_SUPABASE_URL") || "";
     const backupSupabaseServiceKey = Deno.env.get("BACKUP_SUPABASE_SERVICE_ROLE_KEY") || "";
@@ -29,7 +30,7 @@ serve(async (req) => {
     const backupSupabase = backupSupabaseUrl && backupSupabaseServiceKey
       ? createClient(backupSupabaseUrl, backupSupabaseServiceKey)
       : null;
-    
+
     const anonClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!);
     const token = authHeader.replace("Bearer ", "");
     const { data: { user }, error: userError } = await anonClient.auth.getUser(token);
@@ -332,75 +333,130 @@ CRITICAL: "extracted_text" must contain ALL key text verbatim. Include dates in 
       });
     }
 
-    const model = useVisionModel ? "google/gemini-2.5-flash" : "google/gemini-3-flash-preview";
+    const model = useVisionModel ? "gemini-2.5-flash" : "gemini-2.0-flash";
 
-    const aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${lovableApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...userMessages,
-        ],
-        tools: [
-          {
-            type: "function",
-            function: {
-              name: "extract_metadata",
-              description: "Extract comprehensive structured metadata from a document or image",
-              parameters: {
-                type: "object",
-                properties: {
-                  tags: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        name: { type: "string", description: "Tag name" },
-                        confidence: { type: "number", minimum: 0, maximum: 1 },
-                      },
-                      required: ["name", "confidence"],
-                      additionalProperties: false,
+    // Determine AI provider from app_settings
+    let useGeminiDirect = false;
+    try {
+      const { data: aiSetting } = await supabase
+        .from("app_settings")
+        .select("value")
+        .eq("key", "ai_provider")
+        .maybeSingle();
+      if (aiSetting?.value === "gemini" && geminiApiKey) {
+        useGeminiDirect = true;
+      }
+    } catch { /* default to lovable */ }
+
+    const aiEndpoint = useGeminiDirect
+      ? "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions"
+      : "https://ai.gateway.lovable.dev/v1/chat/completions";
+
+    const aiAuthKey = useGeminiDirect ? geminiApiKey! : lovableApiKey!;
+    const aiModel = useGeminiDirect
+      ? (useVisionModel ? "gemini-2.5-flash" : "gemini-2.0-flash")
+      : (useVisionModel ? "google/gemini-2.5-flash" : "google/gemini-3-flash-preview");
+
+    const requestBody = {
+      model: aiModel,
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...userMessages,
+      ],
+      tools: [
+        {
+          type: "function",
+          function: {
+            name: "extract_metadata",
+            description: "Extract comprehensive structured metadata from a document or image",
+            parameters: {
+              type: "object",
+              properties: {
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      name: { type: "string", description: "Tag name" },
+                      confidence: { type: "number", minimum: 0, maximum: 1 },
                     },
+                    required: ["name", "confidence"],
+                    additionalProperties: false,
                   },
-                  summary: { type: "string", description: "5-8 sentence comprehensive summary with synonyms" },
-                  ai_description: { type: "string", description: "Natural language search query to find this document" },
-                  expiry_date: { type: "string", nullable: true, description: "ISO date of expiry/renewal/due date, or null" },
-                  extracted_text: { type: "string", description: "ALL readable text verbatim. For photos: detailed visual description." },
-                  semantic_keywords: { type: "string", description: "40-60 semantic keywords comma-separated. Include English + Hindi + regional synonyms." },
-                  entities: {
-                    type: "array",
-                    items: {
-                      type: "object",
-                      properties: {
-                        type: { type: "string", enum: ["person", "company", "date", "amount", "id_number", "phone", "email", "address", "pan", "gst", "aadhaar", "passport", "policy_number", "invoice_number", "account_number", "dob", "issue_date", "expiry_date_entity", "location", "event"] },
-                        value: { type: "string" },
-                        label: { type: "string" },
-                      },
-                      required: ["type", "value", "label"],
-                      additionalProperties: false,
-                    },
-                  },
-                  original_language: { type: "string", description: "ISO 639-1 language code of the document (e.g., 'en', 'hi', 'ta', 'mr')" },
-                  translated_text: { type: "string", nullable: true, description: "English translation of all text if document is non-English, null if already English" },
                 },
-                required: ["tags", "summary", "ai_description", "expiry_date", "extracted_text", "semantic_keywords", "entities", "original_language", "translated_text"],
-                additionalProperties: false,
+                summary: { type: "string", description: "5-8 sentence comprehensive summary with synonyms" },
+                ai_description: { type: "string", description: "Natural language search query to find this document" },
+                expiry_date: { type: "string", nullable: true, description: "ISO date of expiry/renewal/due date, or null" },
+                extracted_text: { type: "string", description: "ALL readable text verbatim. For photos: detailed visual description." },
+                semantic_keywords: { type: "string", description: "40-60 semantic keywords comma-separated. Include English + Hindi + regional synonyms." },
+                entities: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      type: { type: "string", enum: ["person", "company", "date", "amount", "id_number", "phone", "email", "address", "pan", "gst", "aadhaar", "passport", "policy_number", "invoice_number", "account_number", "dob", "issue_date", "expiry_date_entity", "location", "event"] },
+                      value: { type: "string" },
+                      label: { type: "string" },
+                    },
+                    required: ["type", "value", "label"],
+                    additionalProperties: false,
+                  },
+                },
+                original_language: { type: "string", description: "ISO 639-1 language code of the document (e.g., 'en', 'hi', 'ta', 'mr')" },
+                translated_text: { type: "string", nullable: true, description: "English translation of all text if document is non-English, null if already English" },
               },
+              required: ["tags", "summary", "ai_description", "expiry_date", "extracted_text", "semantic_keywords", "entities", "original_language", "translated_text"],
+              additionalProperties: false,
             },
           },
-        ],
-        tool_choice: { type: "function", function: { name: "extract_metadata" } },
-      }),
-    });
+        },
+      ],
+      tool_choice: { type: "function", function: { name: "extract_metadata" } },
+    };
 
-    if (!aiResponse.ok) {
-      const errorText = await aiResponse.text();
-      console.error("AI gateway error:", aiResponse.status, errorText);
+    // Retry logic with exponential backoff (especially for Gemini rate limits)
+    const MAX_RETRIES = 3;
+    let aiResponse: Response | null = null;
+
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      aiResponse = await fetch(aiEndpoint, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${aiAuthKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (aiResponse.ok) break;
+
+      // Retry on 429 (rate limit) or 503 (overloaded)
+      if ((aiResponse.status === 429 || aiResponse.status === 503) && attempt < MAX_RETRIES) {
+        const waitTime = Math.pow(2, attempt + 1) * 1000 + Math.random() * 1000; // 2s, 4s, 8s + jitter
+        console.warn(`AI rate limited (${aiResponse.status}), retry ${attempt + 1}/${MAX_RETRIES} in ${(waitTime / 1000).toFixed(1)}s`);
+        await new Promise(r => setTimeout(r, waitTime));
+        continue;
+      }
+
+      // If using gemini and it fails, fallback to lovable
+      if (useGeminiDirect && lovableApiKey && attempt === MAX_RETRIES) {
+        console.warn("Gemini failed after retries, falling back to Lovable AI");
+        const fallbackModel = useVisionModel ? "google/gemini-2.5-flash" : "google/gemini-3-flash-preview";
+        aiResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${lovableApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...requestBody, model: fallbackModel }),
+        });
+      }
+      break;
+    }
+
+    if (!aiResponse || !aiResponse.ok) {
+      const errorText = aiResponse ? await aiResponse.text() : "No response";
+      console.error("AI error:", aiResponse?.status, errorText);
       await supabase.from("files").update({ file_status: "error" }).eq("id", fileId);
       if (aiResponse.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited" }), {

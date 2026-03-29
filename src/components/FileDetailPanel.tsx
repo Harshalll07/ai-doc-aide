@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
+import { TypewriterText } from "@/components/ui/TypewriterText";
 
 interface Props {
   file: MockFile & { id?: string; fileType?: string; entities?: any[] };
@@ -321,7 +322,9 @@ const FileDetailPanel = ({ file, onClose, onTagClick }: Props) => {
 
           {/* AI Summary */}
           <Section icon={Brain} title="AI Summary" color="text-primary">
-            <p className="text-sm text-muted-foreground leading-relaxed">{file.summary}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              <TypewriterText text={file.summary || ""} speed={30} />
+            </p>
           </Section>
 
           {/* Tags — clickable + editable */}
