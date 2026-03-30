@@ -34,9 +34,9 @@ const iconMap: Record<string, any> = {
 };
 
 // --- Storage keys ---
-const SMART_FOLDERS_KEY = "Sortifi_smart_folders";
-const SMART_FOLDERS_FILE_COUNT_KEY = "Sortifi_smart_folders_count";
-const PINNED_FOLDERS_KEY = "Sortifi_pinned_folders";
+const SMART_FOLDERS_KEY = "Cluedox_smart_folders";
+const SMART_FOLDERS_FILE_COUNT_KEY = "Cluedox_smart_folders_count";
+const PINNED_FOLDERS_KEY = "Cluedox_pinned_folders";
 
 function loadSmartFolders(): SmartFolder[] {
   try { return JSON.parse(localStorage.getItem(SMART_FOLDERS_KEY) || "[]"); }
@@ -443,7 +443,7 @@ const SmartFoldersPage = () => {
         {loading && (
           <div className="text-center py-16">
             <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
-            <p className="text-sm text-muted-foreground">Sortifi is securely organizing your files...</p>
+            <p className="text-sm text-muted-foreground">Cluedox is securely organizing your files...</p>
           </div>
         )}
 
@@ -482,7 +482,7 @@ const SmartFoldersPage = () => {
                     </button>
                     <button
                       onClick={() => setExpandedFolder(isExpanded ? null : folder.name)}
-                      className="flex-1 flex items-center gap-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/30 transition-colors text-left"
+                      className="flex-1 flex items-center gap-3 p-4 rounded-xl bg-card/50 hover:bg-secondary/30 transition-colors text-left"
                     >
                       <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                         {isExpanded ? <FolderOpen className="w-5 h-5 text-primary" /> : <Icon className="w-5 h-5 text-primary" />}

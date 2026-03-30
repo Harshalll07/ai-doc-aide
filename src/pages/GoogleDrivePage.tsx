@@ -318,7 +318,7 @@ const GoogleDrivePage = () => {
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0 }}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border hover:border-primary/30 transition-colors cursor-pointer"
+                        className="flex items-center gap-3 p-3 rounded-xl bg-card/50 hover:bg-secondary/30 transition-colors cursor-pointer"
                         onClick={() => isFolder && openFolder(file)}
                       >
                         <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
@@ -370,7 +370,7 @@ const GoogleDrivePage = () => {
                 {appFiles.map((file) => (
                   <div
                     key={file.id}
-                    className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border"
+                    className="flex items-center gap-3 p-3 rounded-xl bg-card/50"
                   >
                     <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
                       <FileText className="w-5 h-5 text-muted-foreground" />

@@ -89,7 +89,7 @@ const ResetPasswordPage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
-        <div className="bg-card border border-border rounded-2xl p-8">
+        <div className="bg-card/50 rounded-2xl p-8">
           <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
             <Lock className="w-6 h-6 text-primary" />
           </div>

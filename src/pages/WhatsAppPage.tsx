@@ -172,7 +172,7 @@ const WhatsAppPage = () => {
     <AppLayout>
       <div className="max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          <h1 className="text-2xl sm:text-3xl font-bold mb-1">WhatsApp Integration</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1">Cluedox Integration</h1>
           <p className="text-muted-foreground text-sm mb-8">Link your WhatsApp numbers to search & upload files via chat</p>
         </motion.div>
 
@@ -208,7 +208,7 @@ const WhatsAppPage = () => {
                     <div className="bg-secondary/30 rounded-xl p-4 space-y-2">
                       <p className="text-sm font-medium">How to use:</p>
                       <ul className="text-xs text-muted-foreground space-y-1.5">
-                        <li>💬 Type <strong>sort</strong> to see the menu</li>
+                        <li>💬 Type <strong>cluedox</strong> to see the menu</li>
                         <li>🔍 <strong>Search:</strong> Select option 1, then type your query</li>
                         <li>📤 <strong>Upload:</strong> Send any document or image</li>
                         <li>📊 <strong>Stats:</strong> Select option 3</li>

@@ -53,7 +53,7 @@ const DPRPage = () => {
         {/* 1. Executive Summary */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Target className="w-5 h-5 text-primary" /> 1. Executive Summary</h2>
-          <div className="p-6 rounded-xl bg-card border border-border space-y-4">
+          <div className="p-6 rounded-xl bg-card/50 space-y-4">
             <p className="text-muted-foreground leading-relaxed">
               <strong className="text-foreground">Sortifi</strong> is an AI-powered cloud file management platform designed for individuals and small businesses who deal with high volumes of documents — invoices, contracts, identity proofs, certificates, and more. The platform automates the traditionally manual process of organizing, tagging, searching, and tracking documents.
             </p>
@@ -80,7 +80,7 @@ const DPRPage = () => {
         {/* 2. Problem Statement */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Search className="w-5 h-5 text-primary" /> 2. Problem Statement</h2>
-          <div className="p-6 rounded-xl bg-card border border-border space-y-4">
+          <div className="p-6 rounded-xl bg-card/50 space-y-4">
             <p className="text-muted-foreground leading-relaxed">
               Individuals and small businesses in India manage hundreds of critical documents — Aadhaar cards, PAN cards, insurance policies, property papers, invoices, contracts, and certificates. These documents are typically:
             </p>
@@ -107,7 +107,7 @@ const DPRPage = () => {
         {/* 3. Solution Overview */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Zap className="w-5 h-5 text-primary" /> 3. Solution Overview</h2>
-          <div className="p-6 rounded-xl bg-card border border-border space-y-4">
+          <div className="p-6 rounded-xl bg-card/50 space-y-4">
             <p className="text-muted-foreground leading-relaxed">
               Sortifi provides an end-to-end intelligent document management platform with the following core value propositions:
             </p>
@@ -132,7 +132,7 @@ const DPRPage = () => {
         {/* 4. System Architecture */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Database className="w-5 h-5 text-primary" /> 4. System Architecture</h2>
-          <div className="p-6 rounded-xl bg-card border border-border space-y-6">
+          <div className="p-6 rounded-xl bg-card/50 space-y-6">
             <div className="space-y-2">
               <h3 className="font-semibold">High-Level Architecture</h3>
               <div className="p-6 rounded-lg bg-muted/30 border border-border font-mono text-xs leading-relaxed">
@@ -299,7 +299,7 @@ const DPRPage = () => {
                 ]
               },
             ].map((section, i) => (
-              <div key={i} className="p-6 rounded-xl bg-card border border-border">
+              <div key={i} className="p-6 rounded-xl bg-card/50">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                     <section.icon className="w-5 h-5 text-primary" />
@@ -322,7 +322,7 @@ const DPRPage = () => {
         {/* 6. Technology Stack */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Cpu className="w-5 h-5 text-primary" /> 6. Technology Stack</h2>
-          <div className="p-6 rounded-xl bg-card border border-border">
+          <div className="p-6 rounded-xl bg-card/50">
             <div className="grid sm:grid-cols-2 gap-6">
               {[
                 { category: "Frontend", items: ["React 18 (SPA)", "TypeScript", "Tailwind CSS", "Framer Motion", "Shadcn/UI Components", "React Router v6", "TanStack React Query", "Recharts (Analytics)"] },
@@ -349,7 +349,7 @@ const DPRPage = () => {
         {/* 7. Database Schema */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Database className="w-5 h-5 text-primary" /> 7. Database Schema</h2>
-          <div className="p-6 rounded-xl bg-card border border-border space-y-4">
+          <div className="p-6 rounded-xl bg-card/50 space-y-4">
             <p className="text-sm text-muted-foreground">The system uses a PostgreSQL database with the following core tables:</p>
             <div className="grid sm:grid-cols-2 gap-3">
               {[
@@ -384,7 +384,7 @@ const DPRPage = () => {
         {/* 8. Security & Privacy */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Lock className="w-5 h-5 text-primary" /> 8. Security & Privacy</h2>
-          <div className="p-6 rounded-xl bg-card border border-border space-y-4">
+          <div className="p-6 rounded-xl bg-card/50 space-y-4">
             <div className="grid sm:grid-cols-2 gap-4">
               {[
                 { title: "Row-Level Security", desc: "Every database table has RLS policies ensuring users can only access their own data" },
@@ -410,7 +410,7 @@ const DPRPage = () => {
         {/* 9. Current Stage */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Clock className="w-5 h-5 text-primary" /> 9. Current Stage & Milestones</h2>
-          <div className="p-6 rounded-xl bg-card border border-border space-y-6">
+          <div className="p-6 rounded-xl bg-card/50 space-y-6">
             <div className="flex items-center gap-3 p-4 rounded-lg bg-primary/5 border border-primary/20">
               <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
               <span className="font-semibold">Current Status: V1.0 — Live & Operational</span>
@@ -447,7 +447,7 @@ const DPRPage = () => {
         {/* 10. Future Roadmap */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Globe className="w-5 h-5 text-primary" /> 10. Future Roadmap</h2>
-          <div className="p-6 rounded-xl bg-card border border-border space-y-4">
+          <div className="p-6 rounded-xl bg-card/50 space-y-4">
             {[
               { version: "V2.0 — Q3–Q4 2026", items: ["Voice-based document search", "Contract risk detection (penalties, liabilities, clauses)", "Document timeline view (visual date-based browsing)", "Bulk operations (multi-select, batch tag, batch delete)", "Advanced OCR for handwritten documents"] },
               { version: "V3.0 — Q1 2027", items: ["Mobile app (React Native)", "Offline mode with sync", "Multi-language document support (Hindi, Marathi, etc.)", "Document versioning and edit history", "Custom AI training on user's document patterns"] },
@@ -470,7 +470,7 @@ const DPRPage = () => {
         {/* 11. Deployment */}
         <section className="space-y-4">
           <h2 className="text-2xl font-bold flex items-center gap-2"><Globe className="w-5 h-5 text-primary" /> 11. Deployment & Infrastructure</h2>
-          <div className="p-6 rounded-xl bg-card border border-border">
+          <div className="p-6 rounded-xl bg-card/50">
             <div className="grid sm:grid-cols-2 gap-4">
               {[
                 { label: "Hosting", value: "Lovable Cloud (Global CDN)" },

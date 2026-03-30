@@ -46,7 +46,7 @@ const AnalyticsPage = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="rounded-xl border border-border bg-card p-4"
+                className="rounded-xl bg-card/50 p-4"
               >
                 <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center mb-2", s.bg)}>
                   <Icon className={cn("w-4 h-4", s.color)} />
@@ -63,7 +63,7 @@ const AnalyticsPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="rounded-xl border border-border bg-card p-5 mb-6"
+          className="rounded-xl bg-card/50 p-5 mb-6"
         >
           <h3 className="font-semibold text-sm mb-4 flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-primary" /> Activity Over Time
@@ -92,7 +92,7 @@ const AnalyticsPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="rounded-xl border border-border bg-card p-5"
+          className="rounded-xl bg-card/50 p-5"
         >
           <h3 className="font-semibold text-sm mb-4 flex items-center gap-2">
             <Activity className="w-4 h-4 text-accent" /> Recent Activity

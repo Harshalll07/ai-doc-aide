@@ -208,7 +208,7 @@ const ChatPage = () => {
                   "max-w-[80%] rounded-2xl px-4 py-3",
                   msg.role === "user"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-card border border-border"
+                    : "bg-secondary/40"
                 )}>
                   {msg.role === "assistant" ? <SimpleMarkdown content={msg.content} /> : <p className="text-sm">{msg.content}</p>}
                 </div>
@@ -225,7 +225,7 @@ const ChatPage = () => {
               <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Bot className="w-4 h-4 text-primary" />
               </div>
-              <div className="bg-card border border-border rounded-2xl px-4 py-3">
+              <div className="bg-secondary/40 rounded-2xl px-4 py-3">
                 <Loader2 className="w-4 h-4 animate-spin text-primary" />
               </div>
             </div>

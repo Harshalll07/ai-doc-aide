@@ -245,7 +245,7 @@ const AdminPage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="rounded-xl border border-border bg-card p-4"
+              className="rounded-xl bg-card/50 p-4"
             >
               <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center mb-2", stat.bg)}>
                 <stat.icon className={cn("w-4 h-4", stat.color)} />
@@ -260,7 +260,7 @@ const AdminPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="rounded-xl border border-border bg-card p-5 mb-6"
+          className="rounded-xl bg-card/50 p-5 mb-6"
         >
           <div className="flex items-center gap-3 mb-3">
             <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -330,7 +330,7 @@ const AdminPage = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="rounded-xl border border-border bg-card overflow-hidden"
+          className="rounded-xl bg-card/50 overflow-hidden"
         >
           {loading ? (
             <div className="flex items-center justify-center py-20">

@@ -65,7 +65,7 @@ const ComparePage = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-2 max-h-48 overflow-y-auto rounded-xl border border-border bg-card p-2 space-y-1"
+                    className="mt-2 max-h-48 overflow-y-auto rounded-xl bg-card/50 p-2 space-y-1"
                   >
                     {(files || []).filter(f => f.id !== (side === "a" ? fileB : fileA)).map(f => (
                       <button
@@ -94,7 +94,7 @@ const ComparePage = () => {
         {docA && docB ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Summaries */}
-            <div className="rounded-xl border border-border bg-card p-4">
+            <div className="rounded-xl bg-card/50 p-4">
               <h3 className="font-semibold text-sm mb-2 text-primary">{docA.file_name}</h3>
               <p className="text-xs text-muted-foreground mb-3">{docA.ai_summary || "No summary"}</p>
               <div className="flex flex-wrap gap-1.5 mb-3">
@@ -117,7 +117,7 @@ const ComparePage = () => {
               </div>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-4">
+            <div className="rounded-xl bg-card/50 p-4">
               <h3 className="font-semibold text-sm mb-2 text-accent">{docB.file_name}</h3>
               <p className="text-xs text-muted-foreground mb-3">{docB.ai_summary || "No summary"}</p>
               <div className="flex flex-wrap gap-1.5 mb-3">
@@ -141,7 +141,7 @@ const ComparePage = () => {
             </div>
 
             {/* Stats */}
-            <div className="lg:col-span-2 rounded-xl border border-border bg-card p-4">
+            <div className="lg:col-span-2 rounded-xl bg-card/50 p-4">
               <h3 className="font-semibold text-sm mb-3">Comparison Summary</h3>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[

@@ -75,9 +75,9 @@ serve(async (req) => {
 
     if (waUsers.length === 0) {
       const msgLower = messageText.toLowerCase();
-      if (msgLower === "sort") {
+      if (msgLower === "cluedox") {
         await sendText(msg91Key, integratedNumber, cleanPhone,
-          "👋 Welcome to Sortifi!\n\nTo use WhatsApp features, please link your account in the app:\n1. Open Sortifi app → Settings → WhatsApp\n2. Enter your number and click *Link*\n\n*(No verification code needed!)*");
+          "👋 Welcome to Cluedox!\n\nTo use WhatsApp features, please link your account in the app:\n1. Open Cluedox app → Settings → WhatsApp\n2. Enter your number and click *Link*\n\n*(No verification code needed!)*");
       }
       return jsonOk({ ok: true });
     }
@@ -109,7 +109,7 @@ serve(async (req) => {
           const pickedUser = waUsers[pickNum - 1];
           await setSession(supabase, cleanPhone, "idle", { selected_user_id: pickedUser.user_id });
           await sendText(msg91Key, integratedNumber, cleanPhone,
-            `✅ Account selected! Type *sort* to open the menu.`);
+            `✅ Account selected! Type *cluedox* to open the menu.`);
           return jsonOk({ ok: true });
         } else {
           await sendText(msg91Key, integratedNumber, cleanPhone, "Invalid selection. Please reply with a valid number.");
@@ -195,8 +195,8 @@ serve(async (req) => {
       }
     }
 
-    // ── Only "sort" triggers the bot ──
-    if (messageText.toLowerCase() === "sort") {
+    // ── Only "cluedox" triggers the bot ──
+    if (messageText.toLowerCase() === "cluedox") {
       await sendMainMenu(msg91Key, integratedNumber, cleanPhone);
       await setSession(supabase, cleanPhone, "awaiting_menu", { selected_user_id: userId });
       return jsonOk({ ok: true });
@@ -225,7 +225,7 @@ async function sendMainMenu(authKey: string, intNum: string, phone: string) {
       type: "interactive",
       interactive: {
         type: "button",
-        body: { text: "👋 *Welcome to Sortifi!*\n\nWhat would you like to do?" },
+        body: { text: "👋 *Welcome to Cluedox!*\n\nWhat would you like to do?" },
         action: {
           buttons: [
             { type: "reply", reply: { id: "search", title: "🔍 Search Files" } },
@@ -239,7 +239,7 @@ async function sendMainMenu(authKey: string, intNum: string, phone: string) {
 
   if (!ok) {
     await sendText(authKey, intNum, phone,
-      "👋 *Welcome to Sortifi!*\n\n*1.* 🔍 Search files\n*2.* 📤 Upload a file\n*3.* 📊 View stats\n*4.* 📂 Recent files\n*5.* ❓ Help\n\n📌 *Reply with a number*");
+      "👋 *Welcome to Cluedox!*\n\n*1.* 🔍 Search files\n*2.* 📤 Upload a file\n*3.* 📊 View stats\n*4.* 📂 Recent files\n*5.* ❓ Help\n\n📌 *Reply with a number*");
   }
 }
 
@@ -370,7 +370,7 @@ async function handleMenuChoice(
 
   if (choiceId === "help") {
     await sendTextWithMenuButton(authKey, intNum, phone,
-      "🤖 *Sortifi Help*\n\n🔍 Search — Find files by name or content\n📤 Upload — Send any file to auto-categorize\n📊 Stats — View your file count\n📂 Recent — See last uploads\n💬 Ask — Ask AI questions about any file\n\nType *sort* anytime to open the menu.");
+      "🤖 *Cluedox Help*\n\n🔍 Search — Find files by name or content\n📤 Upload — Send any file to auto-categorize\n📊 Stats — View your file count\n📂 Recent — See last uploads\n💬 Ask — Ask AI questions about any file\n\nType *cluedox* anytime to open the menu.");
     await resetSession(supabase, phone, userId);
     return jsonOk({ ok: true });
   }
@@ -398,7 +398,7 @@ async function handleMenuChoice(
     return jsonOk({ ok: true });
   }
 
-  await sendText(authKey, intNum, phone, "Type *sort* to see the menu 🚀");
+  await sendText(authKey, intNum, phone, "Type *cluedox* to see the menu 🚀");
   return jsonOk({ ok: true });
 }
 
@@ -521,7 +521,7 @@ Keywords: ${fileRecord.semantic_keywords || "N/A"}`;
   const messages = [
     {
       role: "system",
-      content: `You are Sortifi AI assistant. Answer questions about the user's document concisely. Use the file context below.\n\n${fileContext}`,
+      content: `You are Cluedox AI assistant. Answer questions about the user's document concisely. Use the file context below.\n\n${fileContext}`,
     },
     ...chatHistory.slice(-6),
     { role: "user", content: question },

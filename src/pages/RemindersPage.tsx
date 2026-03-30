@@ -44,10 +44,10 @@ const RemindersPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.03 }}
               className={cn(
-                "rounded-xl border bg-card p-4 transition-colors hover:bg-secondary/30",
-                severity === "expired" && "border-destructive/30",
-                severity === "urgent" && "border-warning/30",
-                severity === "normal" && "border-border"
+                "rounded-xl bg-card/50 p-4 transition-colors hover:bg-secondary/30",
+                severity === "expired" && "border border-destructive/30",
+                severity === "urgent" && "border border-warning/30",
+                severity === "normal" && ""
               )}
             >
               <div className="flex items-center justify-between gap-3">
@@ -70,7 +70,7 @@ const RemindersPage = () => {
                       Expires: {new Date(file.expiry_date!).toLocaleDateString()} ·{" "}
                       <span className={cn(
                         severity === "expired" ? "text-destructive font-medium" :
-                        severity === "urgent" ? "text-warning font-medium" : "text-muted-foreground"
+                          severity === "urgent" ? "text-warning font-medium" : "text-muted-foreground"
                       )}>
                         {file.daysUntil > 0 ? `${file.daysUntil} days left` : `Expired ${Math.abs(file.daysUntil)} days ago`}
                       </span>
@@ -125,7 +125,7 @@ const RemindersPage = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="rounded-xl border border-border bg-card p-4 text-center"
+              className="rounded-xl bg-card/50 p-4 text-center"
             >
               <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center mx-auto mb-2", card.bg)}>
                 <card.icon className={cn("w-4 h-4", card.color)} />
